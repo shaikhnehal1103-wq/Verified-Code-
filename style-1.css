@@ -1,0 +1,318 @@
+:root {
+  --purple: #6d5bd0;
+  --purple-soft: #b9b0ea;
+  --ink: #1a1a3a;
+  --muted: #6b7280;
+  --green: #10b981;
+  --green-dark: #059669;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: #fafafc;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--ink);
+  overflow: hidden;
+}
+
+/* soft glow that follows the cursor */
+.pointer-light {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 420px;
+  height: 420px;
+  margin: -210px 0 0 -210px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124, 92, 214, 0.16), transparent 65%);
+  pointer-events: none;
+  transition: transform 0.15s ease-out;
+}
+
+.noise {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.card {
+  position: relative;
+  width: min(370px, 92vw);
+  min-height: 430px;
+  padding: 44px 28px 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1.5px solid transparent;
+  border-radius: 26px;
+  box-shadow: 0 20px 50px rgba(60, 50, 120, 0.08);
+  transition: border-color 0.5s, box-shadow 0.6s;
+}
+
+.card.granted {
+  border-color: rgba(16, 185, 129, 0.45);
+  box-shadow:
+    0 0 0 6px rgba(16, 185, 129, 0.06),
+    0 0 70px rgba(16, 185, 129, 0.28);
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 700;
+  transition: opacity 0.2s;
+}
+
+.subtitle {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--muted);
+  transition: opacity 0.2s;
+}
+
+.title.fade,
+.subtitle.fade {
+  opacity: 0;
+}
+
+/* the area where the 3 steps swap places */
+.stage {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.otp,
+.loader,
+.success {
+  grid-area: 1 / 1;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s, visibility 0.4s, transform 0.4s;
+}
+
+.is-active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ---------- otp boxes ---------- */
+
+.otp {
+  display: flex;
+  gap: 12px;
+}
+
+.digit {
+  width: 56px;
+  height: 62px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--ink);
+  background: #f6f5fb;
+  border: 1.5px solid #e6e3f4;
+  border-radius: 14px;
+  outline: none;
+  caret-color: var(--purple);
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.digit:focus {
+  background: #fff;
+  border-color: var(--purple);
+  box-shadow: 0 0 0 4px rgba(109, 91, 208, 0.14);
+  transform: translateY(-2px);
+}
+
+.digit.filled {
+  background: #fff;
+  border-color: var(--purple-soft);
+}
+
+/* boxes fly apart once the code is complete */
+.otp.scatter .digit {
+  transform: translate(var(--x), var(--y)) rotate(var(--r));
+  box-shadow: 0 8px 20px rgba(109, 91, 208, 0.18);
+  transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s;
+}
+
+.otp.leaving {
+  opacity: 0;
+  transform: scale(0.7);
+}
+
+/* ---------- progress ring ---------- */
+
+.loader {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  transform: scale(0.85);
+}
+
+.loader.is-active {
+  transform: scale(1);
+}
+
+.ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.ring circle {
+  fill: none;
+  stroke-width: 6;
+}
+
+.ring-track {
+  stroke: #ece9fa;
+}
+
+.ring-bar {
+  stroke: var(--purple);
+  stroke-linecap: round;
+  stroke-dasharray: 238.76;
+  stroke-dashoffset: 238.76;
+}
+
+.percent {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--purple);
+}
+
+/* ---------- success ---------- */
+
+.success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  transform: scale(0.8);
+}
+
+.success.is-active {
+  transform: scale(1);
+  transition-delay: 0.1s;
+}
+
+.check-wrap {
+  position: relative;
+}
+
+.check {
+  width: 76px;
+  height: 76px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #34d399, var(--green-dark));
+  box-shadow:
+    0 0 0 10px rgba(16, 185, 129, 0.12),
+    0 10px 30px rgba(16, 185, 129, 0.45);
+}
+
+.check svg {
+  width: 38px;
+  height: 38px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.check path {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+}
+
+.success.is-active .check path {
+  animation: draw 0.5s 0.35s ease forwards;
+}
+
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
+}
+
+.pill {
+  padding: 5px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--green);
+  border-radius: 999px;
+}
+
+.confetti {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  pointer-events: none;
+}
+
+.confetti .dot {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+}
+
+/* ---------- resend ---------- */
+
+.resend {
+  font-size: 12px;
+  color: var(--muted);
+  transition: opacity 0.4s;
+}
+
+.resend.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.resend button {
+  font: inherit;
+  font-weight: 600;
+  color: var(--purple);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.resend button:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 380px) {
+  .digit {
+    width: 48px;
+    height: 54px;
+  }
+  .otp {
+    gap: 9px;
+  }
+}

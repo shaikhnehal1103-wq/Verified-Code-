@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secure Vault Access</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="pointer-light" id="pointerLight"></div>
+  <div class="noise"></div>
+
+  <main class="card" id="card">
+    <h1 class="title" id="title">Enter Access Code</h1>
+    <p class="subtitle" id="subtitle">A 4-digit code has been sent to your device.</p>
+
+    <div class="stage">
+
+      <!-- step 1: code boxes -->
+      <div class="otp is-active" id="otp">
+        <input class="digit" type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code" aria-label="Digit 1">
+        <input class="digit" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 2">
+        <input class="digit" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 3">
+        <input class="digit" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 4">
+      </div>
+
+      <!-- step 2: progress ring -->
+      <div class="loader" id="loader">
+        <svg viewBox="0 0 96 96" class="ring">
+          <circle class="ring-track" cx="48" cy="48" r="38"></circle>
+          <circle class="ring-bar" id="ringBar" cx="48" cy="48" r="38"></circle>
+        </svg>
+        <span class="percent" id="percent">0</span>
+      </div>
+
+      <!-- step 3: done -->
+      <div class="success" id="success">
+        <div class="check-wrap">
+          <div class="confetti" id="confetti"></div>
+          <div class="check">
+            <svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+          </div>
+        </div>
+        <span class="pill">Verified</span>
+      </div>
+
+    </div>
+
+    <p class="resend" id="resend">
+      Didn't receive it? <button type="button" id="resendBtn">Resend</button>
+    </p>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
